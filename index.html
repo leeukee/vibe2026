@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로또 번호 추천기</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 620px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #f7d060, #f4a231);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+
+    .sets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+      min-height: 60px;
+      justify-content: center;
+    }
+
+    .set-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .set-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #888;
+      width: 24px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .balls-wrap {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ball {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4),
+                  inset 0 -4px 8px rgba(0,0,0,0.2),
+                  inset 0 4px 8px rgba(255,255,255,0.2);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    @keyframes popIn {
+      0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+    }
+
+    .c1 { background: linear-gradient(135deg, #f7c948, #e0a800); }
+    .c2 { background: linear-gradient(135deg, #5bc8f5, #1a9fd4); }
+    .c3 { background: linear-gradient(135deg, #ff6b6b, #d63031); }
+    .c4 { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+    .c5 { background: linear-gradient(135deg, #55efc4, #00b894); }
+
+    .placeholder-text {
+      color: #555;
+      font-size: 1rem;
+    }
+
+    .generate-btn {
+      background: linear-gradient(135deg, #f7d060, #f4a231);
+      color: #1a1a2e;
+      border: none;
+      padding: 16px 48px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(244, 162, 49, 0.4);
+      transition: transform 0.15s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(244, 162, 49, 0.55);
+    }
+
+    .generate-btn:active {
+      transform: translateY(0);
+    }
+
+    .history {
+      margin-top: 48px;
+      text-align: left;
+    }
+
+    .history h2 {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .history-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .history-round {
+      font-size: 0.72rem;
+      color: #555;
+      margin-bottom: 2px;
+    }
+
+    .history-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-row-label {
+      font-size: 0.7rem;
+      color: #666;
+      width: 18px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .mini-ball {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-track { background: transparent; }
+    .history-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎱 로또 번호 추천기</h1>
+    <p class="subtitle">버튼을 눌러 이번 주 행운의 번호 5세트를 뽑아보세요!</p>
+
+    <div class="sets-container" id="setsContainer">
+      <span class="placeholder-text">번호를 생성해 주세요</span>
+    </div>
+
+    <button class="generate-btn" onclick="generateNumbers()">번호 생성하기</button>
+
+    <div class="history" id="historySection" style="display:none;">
+      <h2>이전 추천 번호</h2>
+      <ul class="history-list" id="historyList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const lotteryHistory = [];
+
+    function ballClass(num) {
+      if (num <= 10) return 'c1';
+      if (num <= 20) return 'c2';
+      if (num <= 30) return 'c3';
+      if (num <= 40) return 'c4';
+      return 'c5';
+    }
+
+    function ballBg(num) {
+      if (num <= 10) return 'linear-gradient(135deg, #f7c948, #e0a800)';
+      if (num <= 20) return 'linear-gradient(135deg, #5bc8f5, #1a9fd4)';
+      if (num <= 30) return 'linear-gradient(135deg, #ff6b6b, #d63031)';
+      if (num <= 40) return 'linear-gradient(135deg, #a29bfe, #6c5ce7)';
+      return 'linear-gradient(135deg, #55efc4, #00b894)';
+    }
+
+    function pickNumbers() {
+      const pool = Array.from({ length: 45 }, (_, i) => i + 1);
+      const result = [];
+      while (result.length < 6) {
+        const idx = Math.floor(Math.random() * pool.length);
+        result.push(pool.splice(idx, 1)[0]);
+      }
+      return result.sort((a, b) => a - b);
+    }
+
+    function generateNumbers() {
+      const container = document.getElementById('setsContainer');
+      container.innerHTML = '';
+
+      const allSets = [];
+      for (let s = 0; s < 5; s++) {
+        const numbers = pickNumbers();
+        allSets.push(numbers);
+
+        const row = document.createElement('div');
+        row.className = 'set-row';
+
+        const label = document.createElement('span');
+        label.className = 'set-label';
+        label.textContent = s + 1;
+        row.appendChild(label);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'balls-wrap';
+
+        numbers.forEach((num, i) => {
+          const ball = document.createElement('div');
+          ball.className = `ball ${ballClass(num)}`;
+          ball.textContent = num;
+          ball.style.animationDelay = `${(s * 6 + i) * 0.06}s`;
+          wrap.appendChild(ball);
+        });
+
+        row.appendChild(wrap);
+        container.appendChild(row);
+      }
+
+      addToHistory(allSets);
+    }
+
+    function addToHistory(allSets) {
+      if (lotteryHistory.length >= 3) lotteryHistory.pop();
+      lotteryHistory.unshift(allSets);
+
+      const section = document.getElementById('historySection');
+      const list = document.getElementById('historyList');
+      section.style.display = 'block';
+      list.innerHTML = '';
+
+      lotteryHistory.forEach((sets, hi) => {
+        const group = document.createElement('li');
+        group.className = 'history-item';
+
+        const round = document.createElement('div');
+        round.className = 'history-round';
+        round.textContent = hi === 0 ? '방금 전' : `${hi}회 전`;
+        group.appendChild(round);
+
+        sets.forEach((nums, si) => {
+          const row = document.createElement('div');
+          row.className = 'history-row';
+
+          const lbl = document.createElement('span');
+          lbl.className = 'history-row-label';
+          lbl.textContent = si + 1;
+          row.appendChild(lbl);
+
+          nums.forEach(n => {
+            const mb = document.createElement('div');
+            mb.className = 'mini-ball';
+            mb.style.background = ballBg(n);
+            mb.textContent = n;
+            row.appendChild(mb);
+          });
+
+          group.appendChild(row);
+        });
+
+        list.appendChild(group);
+      });
+    }
+  </script>
+</body>
+</html>
