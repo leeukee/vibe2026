@@ -1,0 +1,257 @@
+<!DOCTYPE html>                                                                          
+  <html lang="ko">                                                                                               
+  <head>                                                                                                         
+    <meta charset="UTF-8">                                                                                       
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">                                       
+    <title>로또 번호 추천기</title>                                                                              
+    <style>                                                                                                      
+      * {                                                                                                        
+        margin: 0;                                                                                               
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);                              
+        display: flex;                                                                                           
+        align-items: center;                                                                                     
+        justify-content: center;                                                                                 
+        font-family: 'Segoe UI', sans-serif;
+        color: #fff;                                                                                             
+      }
+                                                                                                                 
+      .container {
+        text-align: center;
+        padding: 40px 20px;                                                                                      
+        max-width: 600px;
+        width: 100%;                                                                                             
+      }                                                                                                          
+   
+      h1 {                                                                                                       
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+        background: linear-gradient(90deg, #f7d060, #f4a231);
+        -webkit-background-clip: text;                                                                           
+        -webkit-text-fill-color: transparent;
+        background-clip: text;                                                                                   
+      }           
+                                                                                                                 
+      .subtitle { 
+        color: #aaa;
+        margin-bottom: 40px;
+        font-size: 0.95rem;                                                                                      
+      }
+                                                                                                                 
+      .balls-container {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;                                                                                         
+        min-height: 90px;
+        align-items: center;                                                                                     
+        margin-bottom: 40px;
+      }                                                                                                          
+   
+      .ball {                                                                                                    
+        width: 74px;
+        height: 74px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;                                                                                     
+        justify-content: center;
+        font-size: 1.5rem;                                                                                       
+        font-weight: 800;
+        color: #fff;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 -4px 8px rgba(0,0,0,0.2), inset 0 4px 8px                
+  rgba(255,255,255,0.2);                                                                                         
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;                                      
+        text-shadow: 0 1px 3px rgba(0,0,0,0.3);                                                                  
+      }                                                                                                          
+                                                                                                                 
+      @keyframes popIn {                                                                                         
+        0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }                                                   
+      }
+                                                                                                                 
+      .ball.color-1  { background: linear-gradient(135deg, #f7c948, #e0a800); }                                  
+      .ball.color-2  { background: linear-gradient(135deg, #5bc8f5, #1a9fd4); }
+      .ball.color-3  { background: linear-gradient(135deg, #ff6b6b, #d63031); }                                  
+      .ball.color-4  { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+      .ball.color-5  { background: linear-gradient(135deg, #55efc4, #00b894); }                                  
+                  
+      .placeholder-text {                                                                                        
+        color: #555;
+        font-size: 1rem;                                                                                         
+      }           
+
+      .generate-btn {
+        background: linear-gradient(135deg, #f7d060, #f4a231);
+        color: #1a1a2e;                                                                                          
+        border: none;
+        padding: 16px 48px;                                                                                      
+        font-size: 1.1rem;                                                                                       
+        font-weight: 700;
+        border-radius: 50px;                                                                                     
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(244, 162, 49, 0.4);
+        transition: transform 0.1s, box-shadow 0.2s;                                                             
+        letter-spacing: 0.5px;                                                                                   
+      }                                                                                                          
+                                                                                                                 
+      .generate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(244, 162, 49, 0.55);                                                         
+      }
+                                                                                                                 
+      .generate-btn:active {                                                                                     
+        transform: translateY(0);
+      }                                                                                                          
+                  
+      .history {
+        margin-top: 48px;
+        text-align: left;
+      }
+
+      .history h2 {                                                                                              
+        font-size: 1rem;
+        color: #888;                                                                                             
+        margin-bottom: 14px;
+        letter-spacing: 1px;
+        text-transform: uppercase;                                                                               
+      }
+                                                                                                                 
+      .history-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;                                                                                  
+        gap: 10px;
+        max-height: 220px;                                                                                       
+        overflow-y: auto;
+      }                                                                                                          
+  
+      .history-item {                                                                                            
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;                                                                                     
+        padding: 12px 18px;
+        display: flex;                                                                                           
+        align-items: center;
+        gap: 10px;                                                                                               
+        font-size: 0.9rem;
+        color: #ccc;                                                                                             
+        animation: slideIn 0.3s ease;
+      }                                                                                                          
+  
+      @keyframes slideIn {                                                                                       
+        from { opacity: 0; transform: translateX(-10px); }
+        to   { opacity: 1; transform: translateX(0); }                                                           
+      }
+                                                                                                                 
+      .history-item .mini-ball {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;                                                                                      
+        display: flex;
+        align-items: center;                                                                                     
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;                                                                                        
+        color: #fff;
+        flex-shrink: 0;                                                                                          
+      }           
+
+      .history-list::-webkit-scrollbar { width: 4px; }                                                           
+      .history-list::-webkit-scrollbar-track { background: transparent; }
+      .history-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }                           
+    </style>                                                                                                     
+  </head>
+  <body>                                                                                                         
+    <div class="container">
+      <h1>🎱 로또 번호 추천기</h1>
+      <p class="subtitle">버튼을 눌러 이번 주 행운의 번호를 뽑아보세요!</p>                                      
+                                                                                                                 
+      <div class="balls-container" id="ballsContainer">                                                          
+        <span class="placeholder-text">번호를 생성해 주세요</span>                                               
+      </div>                                                                                                     
+                  
+      <button class="generate-btn" onclick="generateNumbers()">번호 생성하기</button>                            
+  
+      <div class="history" id="historySection" style="display:none;">                                            
+        <h2>이전 추천 번호</h2>
+        <ul class="history-list" id="historyList"></ul>
+      </div>                                                                                                     
+    </div>
+                                                                                                                 
+    <script>      
+      const history = [];
+
+      function getBallColor(num) {
+        if (num <= 10) return 'color-1';
+        if (num <= 20) return 'color-2';                                                                         
+        if (num <= 30) return 'color-3';
+        if (num <= 40) return 'color-4';                                                                         
+        return 'color-5';                                                                                        
+      }
+                                                                                                                 
+      function getBallBg(num) {
+        if (num <= 10) return 'linear-gradient(135deg, #f7c948, #e0a800)';
+        if (num <= 20) return 'linear-gradient(135deg, #5bc8f5, #1a9fd4)';
+        if (num <= 30) return 'linear-gradient(135deg, #ff6b6b, #d63031)';                                       
+        if (num <= 40) return 'linear-gradient(135deg, #a29bfe, #6c5ce7)';                                       
+        return 'linear-gradient(135deg, #55efc4, #00b894)';                                                      
+      }                                                                                                          
+                  
+      function pickNumbers() {                                                                                   
+        const pool = Array.from({ length: 45 }, (_, i) => i + 1);
+        const result = [];
+        while (result.length < 6) {
+          const idx = Math.floor(Math.random() * pool.length);                                                   
+          result.push(pool.splice(idx, 1)[0]);
+        }                                                                                                        
+        return result.sort((a, b) => a - b);
+      }                                                                                                          
+  
+      function generateNumbers() {                                                                               
+        const numbers = pickNumbers();
+        const container = document.getElementById('ballsContainer');
+
+        container.innerHTML = '';
+        numbers.forEach((num, i) => {
+          const ball = document.createElement('div');
+          ball.className = `ball ${getBallColor(num)}`;                                                          
+          ball.textContent = num;
+          ball.style.animationDelay = `${i * 0.08}s`;                                                            
+          container.appendChild(ball);                                                                           
+        });
+                                                                                                                 
+        addToHistory(numbers);
+      }
+
+      function addToHistory(numbers) {
+        if (history.length >= 5) history.pop();
+        history.unshift(numbers);
+                                                                                                                 
+        const section = document.getElementById('historySection');
+        const list = document.getElementById('historyList');                                                     
+        section.style.display = 'block';
+        list.innerHTML = '';
+
+        history.forEach(nums => {
+          const li = document.createElement('li');
+          li.className = 'history-item';                                                                         
+   
+          nums.forEach(n => {                                                                                    
+            const mb = document.createElement('div');
+            mb.className = 'mini-ball';
+            mb.style.background = getBallBg(n);
+            mb.textContent = n;                                                                                  
+            li.appendChild(mb);
+          });                                                                                                    
+                  
+          list.appendChild(li);
+        });
+      }
+    </script>
+  </body>
+  </html> 
