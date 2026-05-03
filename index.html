@@ -3,331 +3,706 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로또 번호 추천기</title>
+  <title>한국사능력검정시험 심화 연습</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
       color: #fff;
+      padding: 20px;
     }
 
     .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    header {
       text-align: center;
-      padding: 40px 20px;
-      max-width: 620px;
-      width: 100%;
+      padding: 40px 0 30px;
     }
 
-    h1 {
-      font-size: 2.4rem;
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffd700;
       margin-bottom: 8px;
-      background: linear-gradient(90deg, #f7d060, #f4a231);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
-    .subtitle {
-      color: #aaa;
+    header p {
+      color: #aac8e4;
+      font-size: 0.95rem;
+    }
+
+    #startScreen {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    #startScreen .badge {
+      display: inline-block;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-bottom: 30px;
+    }
+
+    #startScreen h2 {
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+      color: #e0f0ff;
+    }
+
+    #startScreen p {
+      color: #aac8e4;
+      line-height: 1.7;
       margin-bottom: 40px;
       font-size: 0.95rem;
     }
 
-    .sets-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 40px;
-      min-height: 60px;
-      justify-content: center;
-    }
-
-    .set-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .set-label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #888;
-      width: 24px;
-      text-align: right;
-      flex-shrink: 0;
-    }
-
-    .balls-wrap {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .ball {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4),
-                  inset 0 -4px 8px rgba(0,0,0,0.2),
-                  inset 0 4px 8px rgba(255,255,255,0.2);
-      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-
-    @keyframes popIn {
-      0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
-      100% { transform: scale(1) rotate(0deg);   opacity: 1; }
-    }
-
-    .c1 { background: linear-gradient(135deg, #f7c948, #e0a800); }
-    .c2 { background: linear-gradient(135deg, #5bc8f5, #1a9fd4); }
-    .c3 { background: linear-gradient(135deg, #ff6b6b, #d63031); }
-    .c4 { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
-    .c5 { background: linear-gradient(135deg, #55efc4, #00b894); }
-
-    .placeholder-text {
-      color: #555;
-      font-size: 1rem;
-    }
-
-    .generate-btn {
-      background: linear-gradient(135deg, #f7d060, #f4a231);
-      color: #1a1a2e;
+    .btn-start {
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      color: #1a1a1a;
       border: none;
       padding: 16px 48px;
       font-size: 1.1rem;
       font-weight: 700;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(244, 162, 49, 0.4);
-      transition: transform 0.15s, box-shadow 0.2s;
-      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(255,215,0,0.4);
     }
 
-    .generate-btn:hover {
+    .btn-start:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(244, 162, 49, 0.55);
+      box-shadow: 0 6px 28px rgba(255,215,0,0.5);
     }
 
-    .generate-btn:active {
-      transform: translateY(0);
+    #quizScreen { display: none; }
+
+    .progress-wrap {
+      margin-bottom: 24px;
     }
 
-    .history {
-      margin-top: 48px;
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #aac8e4;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+
+    .question-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .question-num {
+      font-size: 0.8rem;
+      color: #ffd700;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #e8f4ff;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
       text-align: left;
     }
 
-    .history h2 {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 14px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    .option:hover {
+      background: rgba(255,215,0,0.12);
+      border-color: rgba(255,215,0,0.4);
     }
 
-    .history-list {
-      list-style: none;
+    .option.selected {
+      background: rgba(255,215,0,0.18);
+      border-color: #ffd700;
+    }
+
+    .option.correct {
+      background: rgba(46,213,115,0.2);
+      border-color: #2ed573;
+    }
+
+    .option.wrong {
+      background: rgba(255,71,87,0.2);
+      border-color: #ff4757;
+    }
+
+    .option-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffd700;
+      min-width: 20px;
+      margin-top: 1px;
+    }
+
+    .option-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #ddeeff;
+    }
+
+    .nav-wrap {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 340px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .history-round {
-      font-size: 0.72rem;
-      color: #555;
-      margin-bottom: 2px;
-    }
-
-    .history-row {
-      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      margin-top: 10px;
     }
 
-    .history-row-label {
-      font-size: 0.7rem;
-      color: #666;
-      width: 18px;
-      text-align: right;
-      flex-shrink: 0;
+    .btn-nav {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
     }
 
-    .mini-ball {
-      width: 30px;
-      height: 30px;
+    .btn-nav:hover { background: rgba(255,255,255,0.18); }
+
+    .btn-nav.primary {
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      border: none;
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    .btn-nav.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(255,215,0,0.4);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #resultScreen { display: none; }
+
+    .score-card {
+      text-align: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      margin-bottom: 30px;
+    }
+
+    .score-circle {
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px rgba(255,215,0,0.4);
     }
 
-    .history-list::-webkit-scrollbar { width: 4px; }
-    .history-list::-webkit-scrollbar-track { background: transparent; }
-    .history-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+    .score-num {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .score-card h2 {
+      font-size: 1.3rem;
+      color: #ffd700;
+      margin-bottom: 8px;
+    }
+
+    .score-card p {
+      color: #aac8e4;
+      font-size: 0.9rem;
+    }
+
+    .review-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffd700;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,215,0,0.2);
+    }
+
+    .review-item {
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+      border-left: 3px solid #2ed573;
+    }
+
+    .review-item.wrong {
+      border-left-color: #ff4757;
+    }
+
+    .review-q {
+      font-size: 0.8rem;
+      color: #aac8e4;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .review-question {
+      font-size: 0.95rem;
+      color: #e8f4ff;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .review-answers {
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+    }
+
+    .answer-correct { color: #2ed573; font-weight: 600; }
+    .answer-wrong { color: #ff4757; }
+
+    .review-explanation {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      color: #c8e0f4;
+      line-height: 1.7;
+    }
+
+    .review-explanation strong {
+      color: #ffd700;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .btn-retry {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      color: #1a1a1a;
+      border: none;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: all 0.2s;
+    }
+
+    .btn-retry:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎱 로또 번호 추천기</h1>
-    <p class="subtitle">버튼을 눌러 이번 주 행운의 번호 5세트를 뽑아보세요!</p>
+<div class="container">
+  <header>
+    <h1>한국사능력검정시험</h1>
+    <p>심화 (1·2급) 기출 문제 연습</p>
+  </header>
 
-    <div class="sets-container" id="setsContainer">
-      <span class="placeholder-text">번호를 생성해 주세요</span>
+  <div id="startScreen">
+    <div class="badge">심화 기출 기반 30문제</div>
+    <h2>실력을 확인해보세요</h2>
+    <p>
+      선사시대부터 현대사까지<br>
+      한국사능력검정시험 심화 기출 문제 30선 중<br>
+      랜덤으로 <strong style="color:#ffd700">10문제</strong>가 출제됩니다.<br><br>
+      모든 문제를 풀면 상세 해설을 확인할 수 있습니다.
+    </p>
+    <button class="btn-start" onclick="startQuiz()">문제 풀기 시작</button>
+  </div>
+
+  <div id="quizScreen">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="progressText">1 / 10</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
     </div>
 
-    <button class="generate-btn" onclick="generateNumbers()">번호 생성하기</button>
+    <div class="question-card">
+      <div class="question-num" id="questionNum">문제 1</div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options" id="optionsWrap"></div>
+    </div>
 
-    <div class="history" id="historySection" style="display:none;">
-      <h2>이전 추천 번호</h2>
-      <ul class="history-list" id="historyList"></ul>
+    <div class="nav-wrap">
+      <button class="btn-nav" id="btnPrev" onclick="prevQuestion()">이전</button>
+      <button class="btn-nav primary" id="btnNext" onclick="nextQuestion()">다음</button>
     </div>
   </div>
 
-  <script>
-    const lotteryHistory = [];
+  <div id="resultScreen">
+    <div class="score-card">
+      <div class="score-circle">
+        <div class="score-num" id="scoreNum">0</div>
+        <div class="score-label">/ 10</div>
+      </div>
+      <h2 id="scoreTitle"></h2>
+      <p id="scoreDesc"></p>
+    </div>
 
-    function ballClass(num) {
-      if (num <= 10) return 'c1';
-      if (num <= 20) return 'c2';
-      if (num <= 30) return 'c3';
-      if (num <= 40) return 'c4';
-      return 'c5';
-    }
+    <div class="review-title">문제별 해설</div>
+    <div id="reviewWrap"></div>
 
-    function ballBg(num) {
-      if (num <= 10) return 'linear-gradient(135deg, #f7c948, #e0a800)';
-      if (num <= 20) return 'linear-gradient(135deg, #5bc8f5, #1a9fd4)';
-      if (num <= 30) return 'linear-gradient(135deg, #ff6b6b, #d63031)';
-      if (num <= 40) return 'linear-gradient(135deg, #a29bfe, #6c5ce7)';
-      return 'linear-gradient(135deg, #55efc4, #00b894)';
-    }
+    <button class="btn-retry" onclick="retryQuiz()">다시 풀기</button>
+  </div>
+</div>
 
-    function pickNumbers() {
-      const pool = Array.from({ length: 45 }, (_, i) => i + 1);
-      const result = [];
-      while (result.length < 6) {
-        const idx = Math.floor(Math.random() * pool.length);
-        result.push(pool.splice(idx, 1)[0]);
-      }
-      return result.sort((a, b) => a - b);
-    }
+<script>
+const allQuestions = [
+  {
+    q: "다음 유물이 사용된 시대의 생활 모습으로 옳은 것은? (주먹도끼, 찍개)",
+    options: ["빗살무늬 토기를 만들어 식량을 저장하였다.", "가락바퀴를 이용해 실을 뽑고 옷을 만들었다.", "동굴이나 막집에 살며 무리를 지어 이동하였다.", "청동기로 만든 거울과 방울을 제사에 사용하였다.", "철제 농기구를 이용해 농사를 짓기 시작하였다."],
+    answer: 2,
+    exp: "주먹도끼와 찍개는 구석기 시대의 대표적인 뗀석기입니다. 구석기 시대 사람들은 동굴이나 강가에 막집을 짓고 살았으며, 식량을 찾아 무리 지어 이동하는 생활을 하였습니다. 빗살무늬 토기는 신석기, 청동거울은 청동기 시대의 유물입니다."
+  },
+  {
+    q: "고조선의 사회 모습을 알 수 있는 8조법 중 현재 전해지는 조항에 해당하지 않는 것은?",
+    options: ["사람을 죽인 자는 즉시 사형에 처한다.", "남에게 상처를 입힌 자는 곡식으로 갚는다.", "남의 물건을 훔친 자는 노비로 삼는다.", "도둑질한 자의 가족을 연좌하여 처벌한다.", "남의 물건을 훔쳤다가 용서받으려면 50만 전을 내야 한다."],
+    answer: 3,
+    exp: "고조선 8조법 중 현재 전해지는 3개 조항은 ①살인자는 즉시 사형, ②상해는 곡물로 배상, ③절도는 노비로 삼거나 50만 전으로 속죄입니다. 가족 연좌 처벌은 전해지지 않는 내용이며, 개인의 생명·신체·재산을 중시하는 사유 재산 및 계급 사회였음을 보여줍니다."
+  },
+  {
+    q: "고구려의 발전에 관한 설명으로 옳은 것은?",
+    options: ["근초고왕 때 마한을 통합하고 요서 지방까지 진출하였다.", "광개토대왕이 신라에 침입한 왜를 물리치고 영토를 넓혔다.", "진흥왕이 화랑도를 개편하고 한강 유역을 차지하였다.", "문무왕 때 삼국 통일을 완성하였다.", "장수왕이 신라로 수도를 옮기고 남진 정책을 추진하였다."],
+    answer: 1,
+    exp: "광개토대왕은 신라의 요청으로 군대를 파견해 왜구를 물리치고 만주와 한반도 북부에 걸친 넓은 영토를 확보하였습니다. 근초고왕과 진흥왕·문무왕은 각각 백제와 신라의 왕이며, 장수왕은 평양으로 천도하였습니다."
+  },
+  {
+    q: "신라의 골품제에 대한 설명으로 옳지 않은 것은?",
+    options: ["혈통에 따라 사회적 활동 범위와 관직 진출을 제한하였다.", "성골은 부모 모두 왕족인 최고 신분으로, 왕위를 계승하였다.", "6두품은 아찬까지만 오를 수 있어 '득난'이라 불렸다.", "골품에 따라 집의 크기, 복식, 수레 등 일상생활도 규제받았다.", "6두품은 중앙 관직과 군사권을 독점하였다."],
+    answer: 4,
+    exp: "중앙 관직과 군사권을 독점한 것은 진골 귀족입니다. 6두품은 학문과 실무 분야에서 활동하였으나 최고 관직(17관등 중 6등 아찬)까지만 오를 수 있었습니다. 이를 '득난(得難)'이라 불렀습니다."
+  },
+  {
+    q: "발해에 대한 설명으로 옳은 것을 모두 고른 것은? ㄱ. 대조영이 고구려 유민과 말갈인을 이끌고 건국하였다. ㄴ. 전성기 때 해동성국이라 불렸다. ㄷ. 신라와 함께 남북국 시대를 형성하였다. ㄹ. 9세기 초 거란의 침략으로 멸망하였다.",
+    options: ["ㄱ, ㄴ", "ㄱ, ㄴ, ㄷ", "ㄴ, ㄷ, ㄹ", "ㄱ, ㄷ, ㄹ", "ㄱ, ㄴ, ㄷ, ㄹ"],
+    answer: 1,
+    exp: "ㄱ,ㄴ,ㄷ은 모두 옳습니다. 발해는 대조영이 698년 건국하였고, 선왕 때 전성기로 '해동성국'이라 불렸으며 신라와 남북국 시대를 이루었습니다. ㄹ은 '9세기 초'가 틀렸습니다 — 발해는 926년(10세기) 거란(요)의 침략으로 멸망하였습니다."
+  },
+  {
+    q: "고려 광종이 실시한 정책으로 옳은 것은?",
+    options: ["사심관 제도와 기인 제도를 실시하였다.", "과거제를 도입하고 노비안검법을 실시하였다.", "전시과 제도를 처음 마련하였다.", "12목을 설치하고 지방관을 파견하였다.", "불교를 억압하고 성리학을 통치 이념으로 삼았다."],
+    answer: 1,
+    exp: "고려 광종은 왕권 강화를 위해 956년 노비안검법(불법 노비 해방), 958년 쌍기의 건의로 과거제 도입, 960년 백관의 공복 제정 등을 실시하였습니다. 사심관·기인 제도는 태조, 12목 설치는 성종의 정책입니다."
+  },
+  {
+    q: "고려시대 무신 정변(1170)의 원인으로 옳지 않은 것은?",
+    options: ["문신에 비해 무신이 차별 대우를 받았다.", "무신들이 낮은 관직과 경제적 불이익을 받았다.", "의종의 실정과 향락이 무신들의 불만을 키웠다.", "보현원에서 정중부 등이 무신 정변을 일으켰다.", "최씨 정권이 교정도감을 통해 권력을 독점하였다."],
+    answer: 4,
+    exp: "교정도감을 통한 최씨 정권의 권력 독점은 무신 정변의 원인이 아니라, 정변 이후 최충헌이 설치한 기구입니다. 무신 정변의 주요 원인은 문신 우대·무신 차별, 의종의 실정, 누적된 경제적 불이익 등입니다."
+  },
+  {
+    q: "고려 원 간섭기에 나타난 사실이 아닌 것은?",
+    options: ["왕실 호칭이 격하되어 '폐하'가 '전하'로 바뀌었다.", "몽골풍(변발, 몽골 복식)이 유행하였다.", "결혼도감을 통해 공녀가 원에 보내졌다.", "망이·망소이가 봉기를 일으켰다.", "정동행성이 설치되어 내정 간섭을 받았다."],
+    answer: 3,
+    exp: "망이·망소이의 봉기(1176)는 무신 집권기인 명종 때 일어난 사건으로, 원 간섭기(1270년 이후) 이전의 일입니다. 원 간섭기에는 왕호 격하, 몽골풍 유행, 공녀 차출, 정동행성 설치 등이 있었습니다."
+  },
+  {
+    q: "조선 태종이 실시한 정책으로 옳은 것은?",
+    options: ["집현전을 설치하여 학문을 장려하였다.", "6조 직계제를 실시하고 사병을 혁파하였다.", "경국대전을 완성하여 법치의 기반을 마련하였다.", "훈민정음을 창제하여 문자 생활을 혁신하였다.", "향약을 보급하여 향촌 자치를 강화하였다."],
+    answer: 1,
+    exp: "태종은 왕권 강화를 위해 6조 직계제(6조가 의정부를 거치지 않고 왕에게 직접 보고)를 실시하고, 사병을 혁파하여 병권을 장악하였습니다. 집현전·훈민정음은 세종, 경국대전 완성은 성종의 업적입니다."
+  },
+  {
+    q: "조선 세종 때의 업적으로 옳지 않은 것은?",
+    options: ["훈민정음을 창제하였다.", "측우기, 자격루 등 과학 기구를 제작하였다.", "4군 6진을 개척하여 북방 영토를 확장하였다.", "대동법을 실시하여 공납을 쌀로 통일하였다.", "칠정산을 편찬하여 우리 실정에 맞는 역법을 만들었다."],
+    answer: 3,
+    exp: "대동법은 광해군 때 경기도에서 처음 실시(1608)하여 숙종 때 전국으로 확대된 제도입니다. 세종의 업적으로는 훈민정음 창제(1443), 측우기·자격루 제작, 4군 6진 개척, 칠정산 편찬, 농사직설 편찬 등이 있습니다."
+  },
+  {
+    q: "임진왜란(1592)에 대한 설명으로 옳은 것은?",
+    options: ["조선군은 초기 전투에서 왜군을 잘 막아내었다.", "이순신의 한산도 대첩에서 학익진을 활용해 왜 수군을 크게 물리쳤다.", "명나라는 조선의 요청을 거절하고 참전하지 않았다.", "전쟁 중 신립이 이끄는 수군이 활약하였다.", "전쟁 이후 조선은 일본과 다시는 교류하지 않았다."],
+    answer: 1,
+    exp: "한산도 대첩(1592)에서 이순신은 학익진 전법으로 왜 수군을 크게 격파하였습니다. 조선군은 초기에 부산·충주 등에서 연패하였고, 명나라는 참전하였으며, 신립은 수군이 아닌 육군 장수였습니다. 전쟁 후 기유약조(1609)로 일본과 교류를 재개하였습니다."
+  },
+  {
+    q: "영조와 정조가 시행한 탕평 정책에 대한 설명으로 옳지 않은 것은?",
+    options: ["영조는 붕당의 폐단을 없애기 위해 탕평비를 건립하였다.", "정조는 규장각을 설치하여 왕의 친위 기구로 삼았다.", "영조는 균역법을 실시하여 군역의 부담을 줄여주었다.", "정조는 수원 화성을 건설하고 장용영을 설치하였다.", "탕평 정책으로 붕당 정치가 완전히 사라졌다."],
+    answer: 4,
+    exp: "탕평 정책은 붕당의 폐단을 억제하려는 노력이었지만, 붕당 정치를 완전히 없애지는 못하였습니다. 영조·정조 이후 순조 때부터 세도 정치가 전개되었습니다. 탕평비 건립, 균역법, 규장각·장용영·화성 건설은 모두 옳은 설명입니다."
+  },
+  {
+    q: "흥선대원군의 개혁 정책으로 옳지 않은 것은?",
+    options: ["비변사를 폐지하고 의정부와 삼군부의 기능을 회복하였다.", "서원을 대폭 정리하여 47개소만 남겼다.", "경복궁을 중건하여 왕실의 권위를 높였다.", "사창제를 실시하여 농민의 환곡 부담을 줄였다.", "강화도조약을 체결하여 개항을 단행하였다."],
+    answer: 4,
+    exp: "강화도조약(1876)은 흥선대원군이 실각한 후 고종 친정 시기에 체결된 조약입니다. 흥선대원군은 오히려 통상 수교 거부 정책을 펼쳤습니다. 비변사 폐지, 서원 철폐, 경복궁 중건, 사창제 실시는 모두 흥선대원군의 정책입니다."
+  },
+  {
+    q: "강화도조약(1876)의 내용으로 옳은 것은?",
+    options: ["조선과 청이 동등한 권리를 보유함을 명시하였다.", "일본 공사관 경비를 위한 군대 주둔을 허용하였다.", "부산 외 2개 항구를 개항하고 치외법권을 인정하였다.", "조선의 관세 자주권을 인정하였다.", "최혜국 대우를 규정하였다."],
+    answer: 2,
+    exp: "강화도조약(조일수호조규)의 주요 내용은 조선의 자주국 규정, 3개 항구 개항(부산·원산·인천), 해안 측량권, 치외법권(영사재판권) 인정입니다. 관세 조항이 없어 관세 자주권이 없었고, 최혜국 대우는 포함되지 않았습니다."
+  },
+  {
+    q: "동학 농민 운동(1894)에 대한 설명으로 옳지 않은 것은?",
+    options: ["고부 민란을 계기로 전봉준이 이끄는 농민군이 봉기하였다.", "농민군은 황토현·황룡촌에서 관군을 물리쳤다.", "전주 화약 이후 농민군은 집강소를 통해 자치 활동을 하였다.", "제2차 봉기 때 농민군은 우금치 전투에서 일본군에게 패배하였다.", "농민군의 요구로 갑오개혁이 즉시 전면 실시되었다."],
+    answer: 4,
+    exp: "갑오개혁(1894)은 일본의 압력 아래 친일 내각이 주도하였으며, 농민군의 요구가 '즉시 전면 실시'된 것은 아닙니다. 농민군의 요구 일부(신분제 폐지 등)가 반영되기는 하였습니다. 고부 민란, 황토현 전투, 집강소, 우금치 전투는 모두 옳은 설명입니다."
+  },
+  {
+    q: "독립협회(1896~1898)의 활동으로 옳은 것은?",
+    options: ["고종의 지원 아래 무장 독립 투쟁을 전개하였다.", "러시아의 절영도 조차 요구와 한러은행 설치에 반대하였다.", "만민공동회를 열어 정부의 친일 정책을 지지하였다.", "헌의 6조를 발표하여 군주제 폐지를 요구하였다.", "봉건적 신분제 폐지를 위한 갑오개혁을 주도하였다."],
+    answer: 1,
+    exp: "독립협회는 자주 국권·자유 민권·자강 개혁을 추구하였습니다. 러시아의 절영도 조차 요구와 한러은행 설치에 반대하는 이권 수호 운동을 펼쳤습니다. 만민공동회는 자주 독립과 민권 운동이었고, 헌의 6조는 군주제 폐지가 아닌 의회 설립 요구였습니다."
+  },
+  {
+    q: "을사조약(1905)에 대한 설명으로 옳은 것은?",
+    options: ["대한제국 황제 고종이 직접 서명하여 체결되었다.", "조약으로 대한제국의 외교권이 박탈되었다.", "이 조약으로 일본은 대한제국의 군대를 해산시켰다.", "안중근이 을사조약에 반발해 이토 히로부미를 저격하였다.", "을사조약 이후 총독부가 설치되었다."],
+    answer: 1,
+    exp: "을사조약(을사늑약, 1905)은 일본이 강제로 체결하여 대한제국의 외교권을 박탈하고 통감부를 설치하였습니다. 고종은 서명을 거부하였고, 군대 해산은 1907년 정미7조약 이후이며, 총독부는 1910년 병합 이후 설치되었습니다."
+  },
+  {
+    q: "3·1 운동(1919)에 대한 설명으로 옳지 않은 것은?",
+    options: ["민족 대표 33인이 독립 선언서를 낭독하였다.", "탑골 공원에서 시작된 만세 운동이 전국으로 퍼졌다.", "일제는 유관순 등 시위 참여자들을 탄압하였다.", "3·1 운동 직후 대한민국 임시 정부가 상하이에 수립되었다.", "3·1 운동으로 일제는 문화 통치를 포기하고 무단 통치를 강화하였다."],
+    answer: 4,
+    exp: "3·1 운동 이후 일제는 오히려 무단 통치(헌병 경찰제)에서 문화 통치(보통 경찰제)로 방식을 바꾸었습니다. 이는 강압적 통치에 대한 국제적 비난과 저항 때문이었습니다. 민족 대표 33인의 독립 선언, 탑골 공원 만세 운동, 임시 정부 수립은 모두 옳습니다."
+  },
+  {
+    q: "대한민국 임시 정부에 대한 설명으로 옳은 것은?",
+    options: ["1919년 평양에서 수립되었다.", "연통제와 교통국을 조직하여 국내와 연락하였다.", "무장 독립 투쟁만을 유일한 독립 운동 방략으로 삼았다.", "김구가 처음부터 임시 정부의 주석을 역임하였다.", "임시 정부는 광복 즉시 정부로 공식 인정받아 귀환하였다."],
+    answer: 1,
+    exp: "대한민국 임시 정부는 1919년 상하이에서 수립되었으며, 연통제(국내 비밀 행정 조직)와 교통국(통신 연락 기관)을 운영하였습니다. 초대 대통령은 이승만이었고, 김구는 1940년대에 주석이 되었습니다. 임시 정부는 외교·무장 투쟁·실력 양성 등 다양한 방략을 추구하였습니다."
+  },
+  {
+    q: "광주 학생 항일 운동(1929)의 배경으로 옳은 것은?",
+    options: ["미쓰야 협정 체결로 인한 만주 독립군의 활동 제약에 반발하였다.", "한·일 학생 간의 충돌과 일제의 차별적 처사에 분노하여 일어났다.", "신간회의 주도 아래 치밀하게 계획된 무장 봉기였다.", "3·1 운동의 정신을 계승한 만세 운동이 주된 형태였다.", "임시 정부의 지령을 받아 전국 학생이 동시에 봉기하였다."],
+    answer: 1,
+    exp: "광주 학생 항일 운동은 1929년 10월 나주역에서 일본 학생이 한국 여학생을 희롱한 사건을 계기로, 일제의 식민지 차별 교육에 대한 불만이 폭발하면서 일어났습니다. 신간회는 운동 이후 진상 조사단을 파견하며 지원하였습니다."
+  },
+  {
+    q: "1930~40년대 일제의 민족 말살 정책에 해당하지 않는 것은?",
+    options: ["황국 신민 서사 암송 강요", "창씨개명 강제 실시", "신사 참배 강요", "조선어 교육 금지 및 일본어 상용 강요", "토지 조사 사업을 통한 토지 약탈"],
+    answer: 4,
+    exp: "토지 조사 사업(1910~1918)은 1910년대 무단 통치 시기에 실시된 정책입니다. 1930~40년대 민족 말살 정책에는 황국 신민화(황국 신민 서사, 신사 참배), 창씨개명(1940), 조선어 교육 폐지, 징병제 등이 포함됩니다."
+  },
+  {
+    q: "8·15 광복(1945) 이후 한반도의 상황으로 옳지 않은 것은?",
+    options: ["미국과 소련이 북위 38도선을 경계로 분할 점령하였다.", "모스크바 3국 외상 회의에서 신탁 통치안이 결정되었다.", "김구는 신탁 통치에 찬성하는 입장을 취하였다.", "미·소 공동 위원회가 결렬되어 한반도 문제가 유엔으로 이관되었다.", "남한에서 단독 선거가 실시되어 대한민국 정부가 수립되었다."],
+    answer: 2,
+    exp: "김구와 임시 정부 세력은 신탁 통치에 강하게 반대하였습니다. 초기에는 좌익도 반탁이었으나 소련의 지시로 찬탁으로 전환하였고, 우익(김구 등)은 끝까지 반탁을 주장하였습니다. 38도선 분할, 모스크바 결정, 미소공위 결렬, 단독 선거·정부 수립은 사실입니다."
+  },
+  {
+    q: "6·25 전쟁(1950~1953)에 대한 설명으로 옳은 것은?",
+    options: ["전쟁은 남한의 북침으로 시작되었다.", "인천 상륙 작전으로 국군과 유엔군이 전세를 역전시켰다.", "중국군의 개입으로 국군은 압록강까지 진격할 수 있었다.", "전쟁은 1953년 평화 조약 체결로 완전히 종결되었다.", "이승만은 휴전 협상에 적극 찬성하였다."],
+    answer: 1,
+    exp: "맥아더 장군이 지휘한 인천 상륙 작전(1950.9.15)은 전세를 역전시켰습니다. 전쟁은 북한의 남침으로 시작되었고, 국군이 압록강까지 진격했다가 중국군 개입으로 후퇴하였습니다. 6·25 전쟁은 평화 조약이 아닌 '휴전 협정'으로 끝났으며, 이승만은 휴전에 반대하였습니다."
+  },
+  {
+    q: "4·19 혁명(1960)의 원인과 결과로 옳은 것은?",
+    options: ["이승만 정부의 3·15 부정 선거에 반발하여 일어났으며, 이승만이 하야하였다.", "박정희의 군사 쿠데타가 혁명을 촉발하였다.", "4·19 혁명 직후 제3공화국이 수립되었다.", "혁명의 결과 내각 책임제 대신 대통령 중심제가 채택되었다.", "학생들만 참여한 운동으로 시민의 참여는 없었다."],
+    answer: 0,
+    exp: "4·19 혁명은 이승만 자유당 정권의 3·15 부정 선거(1960)에 항의하여 학생과 시민이 봉기한 사건입니다. 이승만 대통령이 하야하고, 헌법 개정으로 내각 책임제와 양원제가 채택되어 장면 내각이 출범하였습니다. 제3공화국은 5·16 쿠데타 후 박정희 정권입니다."
+  },
+  {
+    q: "5·18 민주화 운동(1980)에 대한 설명으로 옳지 않은 것은?",
+    options: ["전두환을 중심으로 한 신군부의 쿠데타에 저항하여 광주에서 일어났다.", "계엄군의 무력 진압으로 많은 희생자가 발생하였다.", "5·18은 1987년 6월 민주 항쟁의 직접적인 도화선이 되었다.", "5·18 민주화 운동은 2011년 유네스코 세계기록유산에 등재되었다.", "광주 시민들은 시민군을 조직하여 계엄군에 맞서 싸웠다."],
+    answer: 2,
+    exp: "6월 민주 항쟁(1987)의 직접적인 도화선은 박종철 고문 사망 사건(1987.1)과 전두환의 4·13 호헌 조치였습니다. 5·18은 1980년대 민주화 운동 전반에 정신적 토대가 되었지만, 1987년 항쟁의 직접 원인은 아닙니다. 나머지는 모두 옳은 설명입니다."
+  },
+  {
+    q: "6월 민주 항쟁(1987)의 결과로 옳은 것은?",
+    options: ["5년 단임의 대통령 직선제 개헌이 이루어졌다.", "전두환 정권이 무너지고 김대중이 대통령에 당선되었다.", "내각 책임제가 도입되어 국회의 권한이 강화되었다.", "노태우가 4·13 호헌 조치를 발표하였다.", "항쟁의 결과 제5공화국 헌법이 그대로 유지되었다."],
+    answer: 0,
+    exp: "6월 민주 항쟁 결과 노태우의 6·29 민주화 선언으로 5년 단임 대통령 직선제 개헌(현행 헌법)이 이루어졌습니다. 이후 대통령 선거에서 노태우가 당선되었습니다. 4·13 호헌 조치는 항쟁의 원인이었고, 항쟁 결과 현행 제6공화국 헌법이 만들어졌습니다."
+  },
+  {
+    q: "고려 시대 경제에 관한 설명으로 옳지 않은 것은?",
+    options: ["전시과 제도로 관리에게 토지의 수조권을 지급하였다.", "활구(은병)라는 고려 고유의 화폐가 유통되었다.", "예성강 하구 벽란도가 국제 무역항으로 번성하였다.", "경시서를 설치하여 시전 상인들의 상행위를 감독하였다.", "상평통보가 주조되어 전국적으로 유통되었다."],
+    answer: 4,
+    exp: "상평통보는 조선 숙종 때(1678) 주조되어 유통된 화폐입니다. 고려는 성종 때 건원중보, 숙종 때 해동통보·은병(활구)을 만들었으나 금속 화폐 유통은 활발하지 않았습니다. 전시과, 벽란도 무역, 경시서 등은 고려 경제의 특징입니다."
+  },
+  {
+    q: "조선 후기 실학에 대한 설명으로 옳은 것은?",
+    options: ["정약용은 토지를 마을 단위로 공동 소유·경작하자는 여전론을 주장하였다.", "박제가는 토지 제도 개혁보다 기술 혁신과 해외 교역 확대를 강조하였다.", "홍대용은 토지를 균등 분배하는 균전론을 주장하였다.", "유형원은 한전론을 주장하며 토지 소유 상한을 제한하려 하였다.", "이익은 농업 생산성보다 상공업 발달을 더 중시하였다."],
+    answer: 1,
+    exp: "박제가는 '북학의'를 저술하고 청의 문물을 적극 수용하여 상공업 발전과 해외 통상을 강조하였습니다. 정약용의 여전론(공동 경작·분배)은 옳습니다. 한전론(토지 소유 상한 제한)은 이익이 주장하였고, 유형원은 균전론을 주장하였습니다."
+  },
+  {
+    q: "조선 후기 세도 정치 시기의 사회 모습으로 옳지 않은 것은?",
+    options: ["안동 김씨, 풍양 조씨 등 특정 가문이 권력을 독점하였다.", "삼정(전정·군정·환곡)의 문란으로 농민의 부담이 극심하였다.", "홍경래의 난, 임술 농민 봉기 등 민란이 빈발하였다.", "탕평 정책으로 붕당 간의 세력 균형이 유지되었다.", "매관매직이 성행하여 관리들의 부정부패가 심화되었다."],
+    answer: 3,
+    exp: "탕평 정책은 영조·정조 때 추진되었고, 세도 정치(순조~철종, 1800~1863)는 탕평 정치가 무너진 후 나타났습니다. 세도 정치 시기에는 외척 세력이 권력을 독점하고, 삼정 문란, 매관매직, 민란 빈발이 특징입니다."
+  }
+];
 
-    function generateNumbers() {
-      const container = document.getElementById('setsContainer');
-      container.innerHTML = '';
+let quizQuestions = [];
+let userAnswers = [];
+let currentIdx = 0;
 
-      const allSets = [];
-      for (let s = 0; s < 5; s++) {
-        const numbers = pickNumbers();
-        allSets.push(numbers);
+function shuffle(arr) {
+  return arr.slice().sort(() => Math.random() - 0.5);
+}
 
-        const row = document.createElement('div');
-        row.className = 'set-row';
+function startQuiz() {
+  quizQuestions = shuffle(allQuestions).slice(0, 10);
+  userAnswers = new Array(10).fill(null);
+  currentIdx = 0;
 
-        const label = document.createElement('span');
-        label.className = 'set-label';
-        label.textContent = s + 1;
-        row.appendChild(label);
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
 
-        const wrap = document.createElement('div');
-        wrap.className = 'balls-wrap';
+  renderQuestion();
+}
 
-        numbers.forEach((num, i) => {
-          const ball = document.createElement('div');
-          ball.className = `ball ${ballClass(num)}`;
-          ball.textContent = num;
-          ball.style.animationDelay = `${(s * 6 + i) * 0.06}s`;
-          wrap.appendChild(ball);
-        });
+function renderQuestion() {
+  const q = quizQuestions[currentIdx];
+  const total = 10;
 
-        row.appendChild(wrap);
-        container.appendChild(row);
-      }
+  document.getElementById('progressText').textContent = `${currentIdx + 1} / ${total}`;
+  document.getElementById('progressPercent').textContent = `${Math.round((currentIdx / total) * 100)}%`;
+  document.getElementById('progressFill').style.width = `${(currentIdx / total) * 100}%`;
+  document.getElementById('questionNum').textContent = `문제 ${currentIdx + 1}`;
+  document.getElementById('questionText').textContent = q.q;
 
-      addToHistory(allSets);
-    }
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (userAnswers[currentIdx] === i ? ' selected' : '');
+    div.innerHTML = `<span class="option-num">${i + 1}</span><span class="option-text">${opt}</span>`;
+    div.onclick = () => selectOption(i);
+    wrap.appendChild(div);
+  });
 
-    function addToHistory(allSets) {
-      if (lotteryHistory.length >= 3) lotteryHistory.pop();
-      lotteryHistory.unshift(allSets);
+  document.getElementById('btnPrev').disabled = currentIdx === 0;
+  const isLast = currentIdx === total - 1;
+  const btnNext = document.getElementById('btnNext');
+  btnNext.textContent = isLast ? '결과 보기' : '다음';
+}
 
-      const section = document.getElementById('historySection');
-      const list = document.getElementById('historyList');
-      section.style.display = 'block';
-      list.innerHTML = '';
+function selectOption(i) {
+  userAnswers[currentIdx] = i;
+  renderQuestion();
+}
 
-      lotteryHistory.forEach((sets, hi) => {
-        const group = document.createElement('li');
-        group.className = 'history-item';
+function prevQuestion() {
+  if (currentIdx > 0) { currentIdx--; renderQuestion(); }
+}
 
-        const round = document.createElement('div');
-        round.className = 'history-round';
-        round.textContent = hi === 0 ? '방금 전' : `${hi}회 전`;
-        group.appendChild(round);
+function nextQuestion() {
+  if (currentIdx < 9) {
+    currentIdx++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
 
-        sets.forEach((nums, si) => {
-          const row = document.createElement('div');
-          row.className = 'history-row';
+function showResult() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
 
-          const lbl = document.createElement('span');
-          lbl.className = 'history-row-label';
-          lbl.textContent = si + 1;
-          row.appendChild(lbl);
+  let score = 0;
+  quizQuestions.forEach((q, i) => {
+    if (userAnswers[i] === q.answer) score++;
+  });
 
-          nums.forEach(n => {
-            const mb = document.createElement('div');
-            mb.className = 'mini-ball';
-            mb.style.background = ballBg(n);
-            mb.textContent = n;
-            row.appendChild(mb);
-          });
+  document.getElementById('scoreNum').textContent = score;
 
-          group.appendChild(row);
-        });
+  const titles = ['더 노력이 필요해요', '기초를 다져보세요', '절반은 맞혔어요!', '잘하고 있어요!', '훌륭해요!', '완벽합니다!'];
+  const descs = [
+    '포기하지 말고 다시 도전해보세요.',
+    '오답 해설을 꼼꼼히 읽어보세요.',
+    '꾸준히 연습하면 합격할 수 있어요!',
+    '조금만 더 하면 심화 1급이에요!',
+    '거의 다 왔어요! 한 번 더 도전해보세요.',
+    '심화 1급 합격 실력입니다!'
+  ];
+  document.getElementById('scoreTitle').textContent = titles[Math.min(score, 5)];
+  document.getElementById('scoreDesc').textContent = descs[Math.min(score, 5)];
 
-        list.appendChild(group);
-      });
-    }
-  </script>
+  const reviewWrap = document.getElementById('reviewWrap');
+  reviewWrap.innerHTML = '';
+  quizQuestions.forEach((q, i) => {
+    const correct = userAnswers[i] === q.answer;
+    const div = document.createElement('div');
+    div.className = 'review-item' + (correct ? '' : ' wrong');
+    const myAns = userAnswers[i] !== null
+      ? `내 답: ${userAnswers[i] + 1}번 — ${q.options[userAnswers[i]]}`
+      : '미응답';
+    div.innerHTML = `
+      <div class="review-q">문제 ${i + 1} · ${correct ? '✓ 정답' : '✗ 오답'}</div>
+      <div class="review-question">${q.q}</div>
+      <div class="review-answers">
+        <div class="answer-correct">정답: ${q.answer + 1}번 — ${q.options[q.answer]}</div>
+        ${!correct ? `<div class="answer-wrong">${myAns}</div>` : ''}
+      </div>
+      <div class="review-explanation"><strong>해설</strong>${q.exp}</div>
+    `;
+    reviewWrap.appendChild(div);
+  });
+}
+
+function retryQuiz() {
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'block';
+}
+</script>
 </body>
 </html>
