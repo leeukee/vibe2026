@@ -151,6 +151,15 @@
       transition: all 0.2s;
     }
     .btn-next-round:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,215,0,0.4); }
+    .btn-save {
+      display: block; width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #c8e0f4; padding: 13px; font-size: 0.93rem;
+      border-radius: 12px; cursor: pointer; margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .btn-save:hover { background: rgba(255,255,255,0.15); color: #fff; }
   </style>
 </head>
 <body>
@@ -212,6 +221,7 @@
     <div class="review-title">문제별 해설</div>
     <div id="reviewWrap"></div>
     <button class="btn-next-round" id="btnNextRound" onclick="startQuiz()">다음 10문제 풀기</button>
+    <button class="btn-save" onclick="saveResult()">📄 해설 파일로 저장</button>
   </div>
 </div>
 
@@ -593,6 +603,45 @@ function showResult() {
 }
 
 updateStartInfo();
+
+function saveResult() {
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  let score = 0;
+  quizSet.forEach((q, i) => { if (userAnswers[i] === q.answer) score++; });
+
+  let text = `한국사능력검정시험 심화 연습 — 해설 기록\n`;
+  text += `풀이 일시: ${dateStr}\n`;
+  text += `점수: ${score} / 10\n`;
+  text += `${'='.repeat(50)}\n\n`;
+
+  quizSet.forEach((q, i) => {
+    const correct = userAnswers[i] === q.answer;
+    text += `[문제 ${i+1}] ${q.round}  ${correct ? '✓ 정답' : '✗ 오답'}\n`;
+    text += `Q. ${q.q}\n\n`;
+    q.options.forEach((opt, j) => {
+      const mark = j === q.answer ? '★ ' : '  ';
+      const myMark = userAnswers[i] === j && !correct ? '→ ' : '';
+      text += `  ${myMark}${mark}${j+1}. ${opt}\n`;
+    });
+    text += `\n`;
+    if (userAnswers[i] !== null && !correct) {
+      text += `  내 답: ${userAnswers[i]+1}번 — ${q.options[userAnswers[i]]}\n`;
+    }
+    text += `  정답: ${q.answer+1}번 — ${q.options[q.answer]}\n\n`;
+    text += `  [해설]\n  ${q.exp}\n`;
+    text += `${'-'.repeat(50)}\n\n`;
+  });
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `한국사_해설_${dateStr.replace(/[: ]/g, '-')}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
